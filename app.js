@@ -20,6 +20,15 @@ app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
 
+app.use((req, res, next) => {
+  if (req.query.api_key != 123456789) {
+    res.status(401); // Unauthorized = 401, NOT a 200
+    res.json("Invalid API Key");
+  } else {
+    next();
+  }
+});
+
 app.use('/', indexRouter);
 app.use('/movie', movieRouter);
 app.use('/search', searchRouter);
